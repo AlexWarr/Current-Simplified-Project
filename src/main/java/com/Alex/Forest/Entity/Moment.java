@@ -17,7 +17,6 @@ public class Moment {
   
   @Column(value= "Season")
   private String Season;
-
   @Column(value= "Plant_Growth_Phase")
   private String Plant_Growth_Phase;
   @Column(value= "Weather")

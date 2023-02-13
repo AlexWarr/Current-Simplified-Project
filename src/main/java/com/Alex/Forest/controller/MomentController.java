@@ -1,6 +1,7 @@
 package com.Alex.Forest.controller;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.Alex.Forest.Entity.Moment;
 import com.Alex.Forest.service.MomentService;
@@ -42,20 +44,29 @@ public class MomentController {
   
   //Get moment instance by Id
   @GetMapping("{DTG}")
-  public ResponseEntity<Moment> getMomentById(@PathVariable("DTG") LocalDateTime dtg){
-    return new ResponseEntity<Moment>(momentService.getMomentById(dtg), HttpStatus.OK);
+  public ResponseEntity<Moment> getMomentById(@RequestParam(required = true)
+  String dtg){
+      DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+      LocalDateTime dateTime = LocalDateTime.parse(dtg, format);
+    return new ResponseEntity<Moment>(momentService.getMomentById(dateTime), HttpStatus.OK);
   }
   
   //updating or putting moment instance by id
   @PutMapping("{DTG}")
-  public ResponseEntity<Moment> updateMoment(@PathVariable("Moment_ID") LocalDateTime dtg, @RequestBody Moment moment){
-    return new ResponseEntity<Moment>(momentService.UpdateMoment(moment, dtg), HttpStatus.OK);
+  public ResponseEntity<Moment> updateMoment(@RequestParam(required = true)
+  String dtg, @RequestBody Moment moment){
+    DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    LocalDateTime dateTime = LocalDateTime.parse(dtg, format);
+    return new ResponseEntity<Moment>(momentService.UpdateMoment(moment, dateTime), HttpStatus.OK);
   }
   
   //Deleting moment instance by id
   @DeleteMapping("{DTG}")
-  public ResponseEntity<String> deleteMoment(@PathVariable("Moment_ID") LocalDateTime dtg){
-    momentService.deleteMoment(dtg);
+  public ResponseEntity<String> deleteMoment(@RequestParam(required = true)
+  String dtg){
+    DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    LocalDateTime dateTime = LocalDateTime.parse(dtg, format);
+    momentService.deleteMoment(dateTime);
     return new ResponseEntity<String>("Moment Instance Deleted", HttpStatus.OK);
   }
 }

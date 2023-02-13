@@ -1,6 +1,7 @@
 package com.Alex.Forest.service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import com.Alex.Forest.Entity.Moment;
 import com.Alex.Forest.exception.ResourceNotFoundException;
@@ -21,7 +22,8 @@ public class MomentServiceImp implements MomentService{
   //This CREATES
   @Override
   public Moment saveMoment(Moment moment) {
-    moment.setDTG(LocalDateTime.now());
+    LocalDateTime dtg = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+    moment.setDTG(dtg);
     return momentRepository.save(moment);
   }
   //this READS All
@@ -41,8 +43,10 @@ public class MomentServiceImp implements MomentService{
   public Moment UpdateMoment(Moment moment, LocalDateTime dtg) {
     Moment existingMoment = momentRepository.findById(dtg).orElseThrow(() -> 
     new ResourceNotFoundException("Moment", "Date Time Group:", dtg));
-    existingMoment.setPlant_Growth_Phase(moment.getPlant_Growth_Phase());
+    
+    existingMoment.setDTG(dtg);
     existingMoment.setSeason(moment.getSeason());
+    existingMoment.setPlant_Growth_Phase(moment.getPlant_Growth_Phase());
     existingMoment.setWeather(moment.getWeather());
     
     momentRepository.save(existingMoment);
